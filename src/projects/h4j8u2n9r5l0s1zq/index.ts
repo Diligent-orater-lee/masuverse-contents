@@ -105,7 +105,7 @@ function init() {
             vertexColors: true
         });
 
-        let _particles = [];
+        let _particles: any[] = [];
 
         const geometry = new THREE.BufferGeometry();
         geometry.setAttribute('position', new THREE.Float32BufferAttribute([], 3));
@@ -166,10 +166,10 @@ function init() {
         }
 
         function _UpdateGeometry() {
-            const positions = [];
-            const sizes = [];
-            const colours = [];
-            const angles = [];
+            const positions: any[] = [];
+            const sizes: any[] = [];
+            const colours: any[] = [];
+            const angles: any[] = [];
 
             for (let p of _particles) {
                 positions.push(p.position.x, p.position.y, p.position.z);
@@ -286,7 +286,7 @@ function init() {
 
     function getLinearSpline(lerp) {
 
-        const points = [];
+        const points: any[] = [];
         const _lerp = lerp;
 
         function addPoint(t, d) {

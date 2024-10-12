@@ -1,7 +1,6 @@
 import { GUI } from 'dat.gui';
 import * as THREE from "three";
-import { ShaderPass } from "three/examples/jsm/Addons";
-import { EffectComposer, RenderPass } from 'three/examples/jsm/Addons.js';
+import { EffectComposer, RenderPass, ShaderPass } from "three/examples/jsm/Addons.js";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { GlobalSceneTrackerTypes } from '../enums/tracker-enums';
 

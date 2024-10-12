@@ -4,15 +4,24 @@
   "description": "For creating masuverse contents",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "make:project": "tsc && node ./dist/scripts/manager.js --make-project",
+    "upload:project": "tsc && node ./dist/scripts/manager.js --upload-project"
   },
   "author": "Oraterlee",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^5.6.3",
+    "@types/adm-zip": "^0.5.5",
     "@types/dat.gui": "^0.7.13",
-    "@types/three": "^0.169.0"
+    "@types/form-data": "^2.5.0",
+    "@types/node": "^22.7.5",
+    "@types/three": "^0.169.0",
+    "typescript": "^5.6.3"
   },
   "dependencies": {
+    "@types/axios": "^0.14.0",
+    "adm-zip": "^0.5.16",
+    "axios": "^1.7.7",
+    "form-data": "^4.0.1"
   }
 }

@@ -1,12 +1,29 @@
 {
     "compilerOptions": {
-      "module": "commonjs",
-      "esModuleInterop": true,
-      "target": "es6",
+      "target": "ES2020",
+      "useDefineForClassFields": true,
+      "module": "CommonJS",
+      "lib": ["ES2020", "DOM", "DOM.Iterable"],
+      "skipLibCheck": true,
+  
+      /* Bundler mode */
       "moduleResolution": "node",
-      "sourceMap": true,
-      "outDir": "dist"
+      "resolveJsonModule": true,
+      "isolatedModules": true,
+      "noEmit": false,
+      "allowSyntheticDefaultImports": true,
+  
+      /* Three.js specific */
+      "types": ["three", "node"],
+  
+      /* Linting */
+      "strict": true,
+      "noUnusedLocals": false,
+      "noUnusedParameters": false,
+      "noFallthroughCasesInSwitch": true,
+      "noImplicitAny": false,
+        "outDir": "./dist",
+        "rootDir": "./src",
     },
-    "include": ["src/**/*"],
-    "lib": ["es2015"]
+    "include": ["src/**/*"]
   }

@@ -1,11 +1,11 @@
 import * as THREE from "three";
-import { PresetFunctions as PSFunctions, THREEAddons } from '../../types/interfaces/content-creation-interfaces';
+import { THREEAddons as Addons, PresetFunctions as PSFunctions } from '../../types/interfaces/content-creation-interfaces';
 
 const rootScene: THREE.Scene = null as any;
 const Camera: THREE.PerspectiveCamera = null as any;
 const PresetFunctions: PSFunctions = null as any;
 const Renderer: THREE.WebGLRenderer = null as any;
-const THREEAddons: THREEAddons = null as any;
+const THREEAddons: Addons = null as any;
 
 const context = {
 
@@ -45,7 +45,7 @@ function init() {
 
     function getLinearSpline(lerp) {
 
-        const points = [];
+        const points: any[] = [];
         const _lerp = lerp;
 
         function addPoint(t, d) {
@@ -90,7 +90,7 @@ function init() {
             vertexColors: true
         });
 
-        let _particles = [];
+        let _particles: any[] = [];
 
         const geometry = new THREE.BufferGeometry();
         geometry.setAttribute('position', new THREE.Float32BufferAttribute([], 3));
@@ -151,10 +151,10 @@ function init() {
         }
 
         function _UpdateGeometry() {
-            const positions = [];
-            const sizes = [];
-            const colours = [];
-            const angles = [];
+            const positions: any[] = [];
+            const sizes: any[] = [];
+            const colours: any[] = [];
+            const angles: any[] = [];
 
             for (let p of _particles) {
                 positions.push(p.position.x, p.position.y, p.position.z);
@@ -271,7 +271,7 @@ function init() {
     const b = 6; // axis2
     let time = 0;
     const period = 5; // Time to complete one orbit (in seconds)
-    let footballStartX = null;
+    let footballStartX = 0;
 
     // Orbit inclination angles (in radians)
     const inclinationX = Math.PI * 0.2; // Tilt around X axis (affecting Y component)
