@@ -6,7 +6,7 @@ import * as fs from 'fs';
 import * as https from 'https';
 import * as path from 'path';
 import { environment } from '../environment';
-import { ProjectCreateResponse, ProjectUpdateResponse } from '../types/interfaces/api-interfaces';
+import { ProjectUpdateResponse } from '../types/interfaces/api-interfaces';
 
 const command = process.argv[2];
 
@@ -39,16 +39,23 @@ if (command) {
 }
 
 async function createProject() {
-    const apiUrl = environment.appUrl + "project/create-project";
+    // const apiUrl = environment.appUrl + "project/create-project";
 
-    const response: AxiosResponse<ProjectCreateResponse> = await axios.post(apiUrl, {email: environment.email, token: environment.authToken}, {
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-        },
-        httpsAgent: new https.Agent({
-            rejectUnauthorized: false
-        })
-    });
+    // const response: AxiosResponse<ProjectCreateResponse> = await axios.post(apiUrl, {email: environment.email, token: environment.authToken}, {
+    //     headers: {
+    //         'Content-Type': 'application/json;charset=utf-8'
+    //     },
+    //     httpsAgent: new https.Agent({
+    //         rejectUnauthorized: false
+    //     })
+    // });
+
+    const response = {
+        data: {
+            success: true,
+            folderName: 'R2nou9W0qrbP3nCO'
+        }
+    }
 
     if (response.data.success) {
         const folderName = response.data.folderName;
@@ -115,5 +122,6 @@ async function createLocalFolder(folderName: string): Promise<void> {
     
     if (!fs.existsSync(folderPath)) {
         fs.mkdirSync(folderPath, { recursive: true });
+        fs.copyFileSync(path.join(__dirname, "..", "..", "templates", "index.tsfile"), path.join(folderPath, "index.ts"));
     }
 }
