@@ -1,12 +1,25 @@
 
 import * as AdmZip from 'adm-zip';
 import axios, { AxiosResponse } from 'axios';
+import chokidar from 'chokidar';
 import * as FormData from 'form-data';
 import * as fs from 'fs';
 import * as https from 'https';
 import * as path from 'path';
 import { environment } from '../environment';
-import { ProjectUpdateResponse } from '../types/interfaces/api-interfaces';
+import { ProjectCreateResponse, ProjectUpdateResponse } from '../types/interfaces/api-interfaces';
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
 
 const command = process.argv[2];
 
@@ -25,6 +38,15 @@ function runCommand() {
 
             uploadProjectFiles(projectId);
             break;
+
+        case '--watch-project':
+            const watchProjectId = process.argv[3];
+            if (!watchProjectId) {
+                console.log('Project Id not provided');
+                break;
+            }
+            watchProject(watchProjectId);
+            break;
     
         default:
             console.log('invalid command');
@@ -39,23 +61,16 @@ if (command) {
 }
 
 async function createProject() {
-    // const apiUrl = environment.appUrl + "project/create-project";
+    const apiUrl = environment.appUrl + "project/create-project";
 
-    // const response: AxiosResponse<ProjectCreateResponse> = await axios.post(apiUrl, {email: environment.email, token: environment.authToken}, {
-    //     headers: {
-    //         'Content-Type': 'application/json;charset=utf-8'
-    //     },
-    //     httpsAgent: new https.Agent({
-    //         rejectUnauthorized: false
-    //     })
-    // });
-
-    const response = {
-        data: {
-            success: true,
-            folderName: 'R2nou9W0qrbP3nCO'
-        }
-    }
+    const response: AxiosResponse<ProjectCreateResponse> = await axios.post(apiUrl, {email: environment.email, token: environment.authToken}, {
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+        },
+        httpsAgent: new https.Agent({
+            rejectUnauthorized: false
+        })
+    });
 
     if (response.data.success) {
         const folderName = response.data.folderName;
@@ -114,6 +129,41 @@ async function uploadProjectFiles(
     console.error('Error uploading project files:', error instanceof Error ? error.message : String(error));
     throw error;
   }
+}
+
+function watchProject(projectId) {
+    console.log(`🔍 Watching for changes in project: ${projectId}`);
+    
+    const watcher = chokidar.watch(path.join(process.cwd(), "src", "projects", projectId), {
+        ignored: /(^|[\/\\])\../, // ignore dotfiles
+        persistent: true,
+        ignoreInitial: true
+    });
+
+    const debouncedUpload = debounce(() => {
+        uploadProjectFiles(projectId);
+    }, 1000);
+
+    watcher
+        .on('add', path => {
+            console.log(`File ${path} has been added`);
+            debouncedUpload();
+        })
+        .on('change', path => {
+            console.log(`File ${path} has been changed`);
+            debouncedUpload();
+        })
+        .on('unlink', path => {
+            console.log(`File ${path} has been removed`);
+            debouncedUpload();
+        });
+
+    // Handle process termination
+    process.on('SIGINT', () => {
+        console.log('\n👋 Stopping file watcher...');
+        watcher.close();
+        process.exit(0);
+    });
 }
 
 async function createLocalFolder(folderName: string): Promise<void> {
