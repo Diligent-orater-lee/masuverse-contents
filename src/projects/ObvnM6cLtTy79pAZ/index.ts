@@ -16,7 +16,7 @@ function init() {
         {
             title: "Boosting Employment Opportunities",
             paragraph: "BJP's skill development programs and support for startups have created countless job opportunities for Delhi's youth.",
-            position: new THREE.Vector3(-0.45, 0.3, 0),
+            position: new THREE.Vector3(-0.40, 0.3, 0.2),
             audio: "modi_speech_opportunities.mp3"
         },
     ];
@@ -43,7 +43,7 @@ function init() {
             this.titleMesh = null;
             this.paragraphGroup = null;
             this.paragraph = paragraph;
-            this.originalScale = new THREE.Vector3(0.2, 0.2, 0.2);
+            this.originalScale = new THREE.Vector3(0.18, 0.18, 0.18);
             this.setupMesh();
         }
 
@@ -243,6 +243,25 @@ function init() {
 
     let sectionBorderAnimation;
     function createSection() {
+
+        const loader = new THREEAddons.FontLoader();
+        loader.load(PresetFunctions.getBucketUrl + 'UMJLwCKAL_mUfCSR/helvetiker_bold.typeface.json', (font) => {
+            const titleGeometry = new THREEAddons.TextGeometry(`WIN PRIZE`, {
+                font: font,
+                size: 0.08,
+                height: 0.02,
+            });
+
+            const titleMaterial = new THREE.MeshPhongMaterial({
+                color: 0xffffff,
+                transparent: false
+            });
+
+            const titleMesh = new THREE.Mesh(titleGeometry, titleMaterial);
+            titleMesh.position.set(-0.25, 0, 0);
+            rootScene.add(titleMesh);
+        });
+
         const video2 = document.createElement('video');
         video2.id = 'price-section-video';
         video2.playsInline = true;
@@ -267,6 +286,20 @@ function init() {
         );
 
         plane2.position.set(0, -0.4, 0.02);
+
+        const planeGeometry = new THREE.PlaneGeometry(1, 1);
+        const planeMaterial = new THREE.MeshBasicMaterial({
+            transparent: true,
+            opacity: 0,
+        });
+        const hitBox = new THREE.Mesh(planeGeometry, planeMaterial);
+        hitBox.position.set(-0.05, 0.1, 0.9);
+        hitBox.scale.set(0.7, 0.45, 1);
+        plane2.add(hitBox);
+
+        PresetFunctions.onRayCasterClick(hitBox, () => {
+            window.open('https://bjpdelhi.in/questions/question1', '_blank');
+        });
         try {
             video2.play();
         } catch (error) {
